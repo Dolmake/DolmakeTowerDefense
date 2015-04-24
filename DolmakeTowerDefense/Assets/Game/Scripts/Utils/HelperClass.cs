@@ -4,6 +4,7 @@ namespace Utils
 {
     public static class HelperClass
     {
+
         /// <summary>
         /// Extension method for getting interfaces
         /// </summary>
@@ -67,7 +68,7 @@ namespace Utils
             }
             else return null;
         }
-
+		/*
         /// <summary>
         /// Extension method for releasing object from a pool
         /// </summary>
@@ -76,6 +77,7 @@ namespace Utils
         {
             go.SendMessage("mRelease", SendMessageOptions.DontRequireReceiver);
         }
+        */
 
         /// <summary>
         /// Check distances

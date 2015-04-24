@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Utils;
+using DLMKPool;
 
 namespace SGame.Common
 {
@@ -12,7 +13,9 @@ namespace SGame.Common
             if (this.enabled)
             {
                 Debug.Log("Destroying");
-                this.gameObject.PoolRelease();
+
+				this.gameObject.PoolRelease();
+
             }
         }
     }

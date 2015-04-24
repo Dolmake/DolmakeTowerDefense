@@ -22,6 +22,7 @@ namespace SGame.Common
         #endregion
 
         // Use this for initialization
+
         void OnEnable()
         {
             LifeComponent.OnLifeChanged += new System.Action<ILife>(Life_OnLifeChanged);
@@ -38,13 +39,17 @@ namespace SGame.Common
         {
             UpdateLifeBar(obj);
         }
+        
+
 
         #region MISC
         void UpdateLifeBar(ILife life)
         {
-            Vector3 localScale = LifeBar.localScale;
-            localScale.x = (float)life.Life / (float)life.StartingLife;
-            LifeBar.localScale = localScale;
+			if (LifeBar != null){
+            	Vector3 localScale = LifeBar.localScale;
+            	localScale.x = (float)life.Life / (float)life.StartingLife;
+            	LifeBar.localScale = localScale;
+			}
         }
         #endregion
     }

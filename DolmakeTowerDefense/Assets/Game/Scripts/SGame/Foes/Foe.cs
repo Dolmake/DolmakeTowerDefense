@@ -9,6 +9,7 @@ namespace SGame.Foes
     {  
         FoeSpawnerManager SpawnManager;//Owner
 
+		/*
         void OnEnable()
         {           
             LifeComponent.OnNoLife += new System.Action<ILife>(Life_OnNoLife);
@@ -18,11 +19,21 @@ namespace SGame.Foes
             LifeComponent.OnNoLife -= new System.Action<ILife>(Life_OnNoLife);
         }
 
+
         void Life_OnNoLife(ILife obj)
         {          
             SpawnManager.IncreaseDeadFoes(this);
             DestroyFoe.mDestroy();
         }
+        */
+
+		void Update(){
+			if (LifeComponent.Life <= 0)
+			{
+				SpawnManager.IncreaseDeadFoes(this);
+				DestroyFoe.mDestroy();
+			}
+		}
 
         #region Components
 

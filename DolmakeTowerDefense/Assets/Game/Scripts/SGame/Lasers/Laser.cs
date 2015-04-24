@@ -37,6 +37,9 @@ namespace SGame.Lasers
             LifeComponent.ResetLife();
         }
 
+
+
+
         void OnEnable()
         {
             LifeComponent.OnNoLife += new System.Action<ILife>(LifeComponent_OnNoLife);
@@ -45,6 +48,7 @@ namespace SGame.Lasers
         {
             LifeComponent.OnNoLife -= new System.Action<ILife>(LifeComponent_OnNoLife);
         }
+
 
         void LifeComponent_OnNoLife(ILife obj)
         {

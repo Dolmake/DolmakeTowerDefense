@@ -1,66 +1,15 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Utils
+
+namespace DLMKPool
 {
-    public interface IPool
-    {
-        /// <summary>
-        /// Max objects used at the same time
-        /// </summary>
-        int MaxObjectsUsedAtTime { get; }
-
-        /// <summary>
-        /// Is Factory Initialized?
-        /// </summary>
-        bool IsInitialized { get; }
-
-        /// <summary>
-        /// Internal list of Used objects
-        /// </summary>
-        List<GameObject> UsedObjects { get; }
-
-        /// <summary>
-        /// Initialize the Factory
-        /// </summary>
-        /// <param name="parent">Parent to attach new GameObjects</param>
-        /// <param name="prefab">Prefab to clone</param>
-        /// <param name="capacity">Initial size</param>
-        /// <returns>True if success</returns>
-        bool Initialize(Transform parent, GameObject prefab, int capacity);
-
-        /// <summary>
-        /// Deinitialize the Factory
-        /// </summary>
-        /// <returns></returns>
-        bool Deinitialize();
-
-        /// <summary>
-        /// Get a new Gameobject
-        /// </summary>
-        /// <returns></returns>
-        GameObject Get();
-
-        /// <summary>
-        /// Get a new object forcing an Instantiate
-        /// </summary>
-        /// <param name="forceInstantiate"></param>
-        /// <returns></returns>
-        GameObject Get(bool forceInstantiate);
-
-        /// <summary>
-        /// Release the GameObject. Use it when finish the use
-        /// </summary>
-        /// <param name="o"></param>
-        void Release(GameObject o);
-
-    }
-
+  
     /// <summary>
     /// Implementation
     /// </summary>
-    public class GameObjectPool : IPool
+    public class GameObjectPool : IPool<GameObject>
     {
         GameObject _prefab;
         Transform _parent;
@@ -140,33 +89,52 @@ namespace Utils
         /// <returns></returns>
         public GameObject Get(bool forceInstantiate)
         {
-            if (forceInstantiate) return _Instantiate();
-            if (_used.Count < MaxObjectsUsedAtTime)
+            GameObject result = null;
+            if (forceInstantiate) result = _Instantiate();
+            else
             {
-                if (_notUsed.Count > 0)
+                if (_used.Count < MaxObjectsUsedAtTime)
                 {
-                    GameObject res = _notUsed[_notUsed.Count - 1];
-                    _notUsed.RemoveAt(_notUsed.Count - 1);
-                    _used.Add(res);
-                    _Activate(res);
-                    return res;
+                    if (_notUsed.Count > 0)
+                    {
+                        GameObject res = _notUsed[_notUsed.Count - 1];
+                        _notUsed.RemoveAt(_notUsed.Count - 1);
+                        _used.Add(res);
+                        _Activate(res);
+                        result = res;
+                    }
+                    else result= _Instantiate();
                 }
-                else return _Instantiate();
+                else result= null;
             }
-            else return null;
+
+            if (OnGetInvoker != null)
+                OnGetInvoker(result);
+
+            return result;
         }
 
         /// <summary>
         /// Release a Gameobject
         /// </summary>
         /// <param name="o"></param>
-        public void Release(GameObject o)
+        public bool Release(GameObject o)
         {
             if (o != null && _used.Remove(o))
             {
                 _Deactivate(o);
                 _notUsed.Add(o);
+                if (OnReleaseInvoker != null)
+                    OnReleaseInvoker(o);
+
+                return true;
             }
+            else return false;
+        }
+
+        bool _Release(object o)
+        {
+            return Release((GameObject)o);
         }
 
 
@@ -180,6 +148,9 @@ namespace Utils
                 {
                     _Deactivate(_used[0]);
                     _notUsed.Add(_used[0]);
+                    if (OnReleaseInvoker != null)
+                        OnReleaseInvoker(_used[0]);
+
                 }
                 _used.RemoveAt(0);
             }
@@ -187,12 +158,13 @@ namespace Utils
         GameObject _Instantiate()
         {
             GameObject o = GameObject.Instantiate(_prefab) as GameObject;
-
+           
             //Always add a factoryReleaser to simplify deallocation
             PoolReleaser releaser = o.GetComponent<PoolReleaser>();
             if (releaser == null)
-                releaser = o.AddComponent<PoolReleaser>();
-            releaser.mSetFactory(this);
+                releaser = o.gameObject.AddComponent<PoolReleaser>();
+            releaser.mSetDelegate(new PoolReleaser.ReleaseDelegate(_Release), o);
+           
 
             o.transform.parent = _parent;
             _used.Add(o);
@@ -204,17 +176,43 @@ namespace Utils
             o.SetActive(true);
         }
         void _Deactivate(GameObject o)
-        {
-            o.transform.parent = _parent;
+        {            
+            o.SetActive(false);
             //On deactivate always reasing parent...
-            o.SetActive(false);          
-           
+            o.transform.parent = _parent;
+
         }
 
         #endregion
 
 
+        System.Action<GameObject> OnGetInvoker;
+        public event System.Action<GameObject> OnGet
+        {
+            add
+            {
+                OnGetInvoker += value;
+            }
+            remove
+            {
+                OnGetInvoker -= value;
+            }
+        }
+
+        System.Action<GameObject> OnReleaseInvoker;
+        public event System.Action<GameObject> OnRelease
+        {
+            add
+            {
+                OnReleaseInvoker += value;
+            }
+            remove
+            {
+                OnReleaseInvoker -= value;
+            }
+        }
     }
 
+  
 }
 

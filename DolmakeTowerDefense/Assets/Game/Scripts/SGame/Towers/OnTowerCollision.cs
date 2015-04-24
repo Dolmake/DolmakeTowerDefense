@@ -20,6 +20,7 @@ namespace SGame.Towers
 
         void OnTriggerEnter(Collider other)
         {
+			if (!this.enabled) return;
             Debug.Log("Trigger on the Tower");
             TowerLife.mOnImpact(1);
         }

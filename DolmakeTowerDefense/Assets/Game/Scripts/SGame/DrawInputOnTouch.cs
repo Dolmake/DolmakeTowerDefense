@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Utils;
-using SMain.Input;
 
 namespace SGame
 {
@@ -10,6 +9,8 @@ namespace SGame
     {
 
         public GameObject PrefabTouchPointer;
+
+		/*
 
         GameObjectPool _pointers = new GameObjectPool();
         Dictionary<int, GameObject> _pointerDic = new Dictionary<int, GameObject>();
@@ -65,6 +66,7 @@ namespace SGame
             //Debug.Log("UpdatePointer");
             o.transform.position = const_hit.point;
         }
+        */
 
     }
 }

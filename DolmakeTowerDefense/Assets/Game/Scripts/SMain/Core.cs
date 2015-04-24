@@ -91,54 +91,8 @@ namespace Scripts.SMain
 
         }
 
-        public int TargetFrame = 1000;
-        public int GC_Invokation_FRAME = 30;//Garbage Collector calls every...
-        int _frameCounter = 0;
-
-        public delegate void LoadLevelHandler();
-
-        /// <summary>
-        /// Private delegate to manage the event OnLoadLevel
-        /// </summary>
-        private LoadLevelHandler OnLoadLevelInvoker;
-
-        /// <summary>
-        ///  Private delegate to manage the event OnLoadLevel
-        /// </summary>
-        private LoadLevelHandler OnLevelLoadedInvoker;
-
-        /// <summary>
-        /// Happens on new scene loading.
-        /// </summary>
-        public event LoadLevelHandler OnLoadLevel
-        {
-            add
-            {
-                OnLoadLevelInvoker += value;
-            }
-
-            remove
-            {
-                OnLoadLevelInvoker -= value;
-            }
-        }
-
-        /// <summary>
-        /// Happens on new scene loaded
-        /// </summary>
-        public event LoadLevelHandler OnLevelLoaded
-        {
-            add
-            {
-                OnLevelLoadedInvoker += value;
-            }
-
-            remove
-            {
-                OnLevelLoadedInvoker -= value;
-            }
-        }
-
+        public int TargetFrame = 1000;       
+        
         void Awake()
         {
             _instance = this;
@@ -160,17 +114,6 @@ namespace Scripts.SMain
             {
                 GoBack();
             }
-
-            if (GC_Invokation_FRAME > 0)
-            {
-                _frameCounter++;
-                if (_frameCounter > GC_Invokation_FRAME)
-                {
-                    _frameCounter = 0;
-                    System.GC.Collect();
-                }
-            }
-
         }
 
         /// <summary>
@@ -283,14 +226,11 @@ namespace Scripts.SMain
 
             string scene = StackLevels.Peek();           
 
-            if (OnLoadLevelInvoker != null)
-                OnLoadLevelInvoker();
-
+            
             Application.LoadLevel(scene);
             CurrentScene = scene;
 
-            if (OnLevelLoadedInvoker != null)
-                OnLevelLoadedInvoker();
+            
         }
 
         public override string ToString()

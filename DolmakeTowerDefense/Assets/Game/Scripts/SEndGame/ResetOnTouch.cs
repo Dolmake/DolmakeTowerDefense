@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
-using SMain.Input;
 using Scripts.SMain;
 
 public class ResetOnTouch : MonoBehaviour {
 
     public string SceneToGo;
 
+	/*
     void OnEnable()
     {
         InputServer.SINGLETON.OnRayAtPress += SINGLETON_OnRayAtPress;
@@ -21,4 +21,12 @@ public class ResetOnTouch : MonoBehaviour {
     {
         Core.SINGLETON.GoBack(SceneToGo);
     }  
+
+*/
+	void Update()
+	{
+		if (Input.GetMouseButton(0)){
+			Core.SINGLETON.GoBack(SceneToGo);
+		}
+	}
 }

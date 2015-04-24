@@ -30,7 +30,7 @@ namespace SGame.Lasers
         void OnEnable()
         {
             _accumTime = 0;
-            if (RangeGameObject != null)
+            if (RangeGameObject != null && RangeGameObject.activeSelf)
                 RangeGameObject.transform.localScale = Vector3.one * Range;
             
         }      
@@ -61,14 +61,17 @@ namespace SGame.Lasers
         {
             GameObject foe = null;
 
-            for (int i = 0; foe == null && i < BattleServer.SINGLETON.FoesPlaying.Count; ++i)
-            {
-                GameObject foeToCheck = BattleServer.SINGLETON.FoesPlaying[i];
-                if (Utils.HelperClass.DistanceLessThan(foeToCheck.transform.position, TransformCached.position, this.Range))
-                {
-                    foe = foeToCheck;
-                }
-            }
+			if (BattleServer.SINGLETON != null)
+			{
+	            for (int i = 0; foe == null && i < BattleServer.SINGLETON.FoesPlaying.Count; ++i)
+	            {
+	                GameObject foeToCheck = BattleServer.SINGLETON.FoesPlaying[i];
+	                if (Utils.HelperClass.DistanceLessThan(foeToCheck.transform.position, TransformCached.position, this.Range))
+	                {
+	                    foe = foeToCheck;
+	                }
+	            }
+			}
             return foe;
         }
 

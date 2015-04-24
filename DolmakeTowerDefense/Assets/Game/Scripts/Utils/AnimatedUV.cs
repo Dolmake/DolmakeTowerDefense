@@ -8,11 +8,11 @@ public class AnimatedUV : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Vector2 uv = this.renderer.material.mainTextureOffset;
+        Vector2 uv = this.GetComponent<Renderer>().material.mainTextureOffset;
         uv.x += Time.deltaTime * (1f - Mask.x);
         uv.y += Time.deltaTime * (1f - Mask.y);
         uv.x += uv.x > 1f ? -1f : 0f;
         uv.y += uv.y > 1f ? -1f : 0f;
-        this.renderer.material.mainTextureOffset = uv;
+        this.GetComponent<Renderer>().material.mainTextureOffset = uv;
 	}
 }

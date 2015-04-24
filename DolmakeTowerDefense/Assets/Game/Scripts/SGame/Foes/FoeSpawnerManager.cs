@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Utils;
+using P8Core.P8Common;
 
 namespace SGame.Foes
 {
@@ -9,7 +10,7 @@ namespace SGame.Foes
     {
         int _deadFoes = 0;
         List<GameObject> _foesPlaying = new List<GameObject>();
-        List<GameObjectPool> _pools = new List<GameObjectPool>();       
+		List<DLMKPool.GameObjectPool> _pools = new List<DLMKPool.GameObjectPool>();       
 
         /// <summary>
         /// Public to be able to edit in the Editor
@@ -53,11 +54,11 @@ namespace SGame.Foes
         {
             if (Prefab_Foe != null)
             {
-                GameObjectPool poolFoes = new GameObjectPool();
+				DLMKPool.GameObjectPool poolFoes = new DLMKPool.GameObjectPool();
                 poolFoes.Initialize(this.transform, Prefab_Foe, 5);
                 _pools.Add(poolFoes);
 
-                GameObjectPool foesZigZagPool = new GameObjectPool();
+				DLMKPool.GameObjectPool foesZigZagPool = new DLMKPool.GameObjectPool();
                 foesZigZagPool.Initialize(this.transform, Prefab_Foe_Zigzag, 5);
                 _pools.Add(foesZigZagPool);
 

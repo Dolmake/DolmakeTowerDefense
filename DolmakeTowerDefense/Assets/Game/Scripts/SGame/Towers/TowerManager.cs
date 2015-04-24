@@ -1,15 +1,25 @@
-﻿using UnityEngine;
+﻿using P8Core.P8Common;
+using UnityEngine;
 using System.Collections;
 using Utils;
-using SMain.Input;
+
 
 namespace SGame.Towers
 {
     public class TowerManager : MonoBehaviour
     {
-        GameObjectPool _poolTowers = new GameObjectPool();
+	
+		DLMKPool.GameObjectPool _poolTowers = new DLMKPool.GameObjectPool();
 
         public GameObject Prefab_Tower;
+		Collider _collider = null;
+		public Collider Collider{
+			get{
+				if (_collider == null)
+					_collider = GetComponent<Collider>();
+				return _collider;
+			}
+		}
 
         //public int MaxTowers = 5;//Max towers allowed to deploy
         public int _maxTowers = 10;
@@ -51,14 +61,9 @@ namespace SGame.Towers
         {
             if (Prefab_Tower != null)
             {
-                _poolTowers.Initialize(this.transform, Prefab_Tower, MaxTowers);  
+                _poolTowers.Initialize(this.transform, Prefab_Tower, 0);  
             }
-            InputServer.SINGLETON.OnRayAtPress += SINGLETON_OnRayAtPress;
-        }
-
-        void OnDisable()
-        {
-            InputServer.SINGLETON.OnRayAtPress -= SINGLETON_OnRayAtPress;
+           
         }
    
 
@@ -67,14 +72,32 @@ namespace SGame.Towers
             _poolTowers.Deinitialize();
         }
 
+		//float _time = 5f;
+		void Update()
+		{
+			if (Input.GetMouseButton(0))
+			{
+				RaycastHit hit;
+				Vector3 pos_VP = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+				Ray ray = Camera.main.ViewportPointToRay(pos_VP);
+				if (Physics.Raycast(ray, out hit, Camera.main.farClipPlane))
+				{
+					OnScreenPressed(ref hit);
+				}
+			}
+			/*
+			_time -= Time.deltaTime;
+			if (_time < 0){
+				_time= 5f;
+				SetATowerAt(new Vector3(Random.Range(-5,5),1,Random.Range(-2,2)));
+			}
+			*/
+		}
+
         #region MISC
 
 
-        void SINGLETON_OnRayAtPress(ref RaycastHit const_hit, Press touch, Camera camera, ref Ray const_ray)
-        {
-            OnScreenPressed(ref const_hit);
-        }    
-
+       
         private void OnScreenPressed(ref RaycastHit const_hit)
         {
             if (IsMe(ref const_hit) && CanDeploy())
@@ -90,19 +113,21 @@ namespace SGame.Towers
         }
         private bool IsMe(ref RaycastHit const_hit)
         {
-            return const_hit.collider == this.collider;
+			return const_hit.collider == this.Collider;
         }
 
         private void SetATowerAt(Vector3 postion_WS)
         {
+			Debug.Log("Setting tower at :" + postion_WS);
             GameObject tower = _poolTowers.Get();
             if (tower != null)
             {
                 _towersDeployed++;
-                tower.SendMessage("mOnSpawn",this, SendMessageOptions.DontRequireReceiver);
-                postion_WS.y = BattleServer.SINGLETON.BattleY;
+                
+                postion_WS.y = BattleServer.SINGLETON != null ? BattleServer.SINGLETON.BattleY : postion_WS.y;
                 tower.transform.position = postion_WS;
-                //Debug.Log("Deploying Tower at " + postion_WS);
+                Debug.Log("Tower deployed at " + postion_WS);
+				tower.SendMessage("mOnSpawn",this, SendMessageOptions.DontRequireReceiver);
             }
         }
 

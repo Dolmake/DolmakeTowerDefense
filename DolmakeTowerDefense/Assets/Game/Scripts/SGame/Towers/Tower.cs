@@ -31,6 +31,7 @@ namespace SGame.Towers
         }
         #endregion
 
+
         void OnEnable()
         {
             LifeComponent.OnNoLife += new System.Action<ILife>(Life_OnNoLife);
@@ -41,11 +42,20 @@ namespace SGame.Towers
             LifeComponent.OnNoLife -= new System.Action<ILife>(Life_OnNoLife);
         }
 
+		void Life_OnNoLife(ILife obj)
+		{
+			DestroyTower.mDestroy();
+		}
+        
+
+
+
         #region Messages
 
         public void mOnSpawn(MonoBehaviour towerManager)
         {
-            LifeComponent.ResetLife();
+			if (this.enabled)
+				LifeComponent.ResetLife();
         }
 
         public void mOnImpact(int strenght)
@@ -56,11 +66,7 @@ namespace SGame.Towers
         }
         #endregion
 
-        #region MISC
-        void Life_OnNoLife(ILife obj)
-        {
-            DestroyTower.mDestroy();
-        }
-        #endregion
+
+        
     }
 }

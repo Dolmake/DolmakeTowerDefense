@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using System.Collections;
 using Utils;
 using SGame.Foes;
@@ -12,7 +13,7 @@ namespace SGame
     {
 
         GameObject LasersParent;//All lasers has the same parent
-        GameObjectPool _laserPool = new GameObjectPool();
+		DLMKPool.GameObjectPool _laserPool = new DLMKPool.GameObjectPool();
 
         /// <summary>
         /// Factor that defines how difficulty increases
@@ -47,7 +48,7 @@ namespace SGame
         /// <summary>
         /// Pool of lasers
         /// </summary>
-        public GameObjectPool LaserPool
+		public DLMKPool.GameObjectPool LaserPool
         {
             get { return _laserPool; }           
         }

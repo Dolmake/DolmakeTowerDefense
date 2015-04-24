@@ -16,18 +16,26 @@ namespace SGame.GameStates
             //Set the current Level
             _currentLevel = BattleServer.SINGLETON.CurrentLevel;
             _lastEnemiesCounter = BattleServer.SINGLETON.DeadFoes;
-            BattleServer.SINGLETON.Allied.LifeComponent.OnNoLife += new System.Action<Common.ILife>(Life_OnNoLife);
+            //BattleServer.SINGLETON.Allied.LifeComponent.OnNoLife += new System.Action<Common.ILife>(Life_OnNoLife);
         }
-
+		//Allied has lost!!!!
+		void Life_OnNoLife(Common.ILife obj)
+		{
+			this.FiniteStateMachine.ChangeState(this.NextState);
+		}
        
 
         protected override void OnDeactive()
         {
-            BattleServer.SINGLETON.Allied.LifeComponent.OnNoLife -= new System.Action<Common.ILife>(Life_OnNoLife);
+            //BattleServer.SINGLETON.Allied.LifeComponent.OnNoLife -= new System.Action<Common.ILife>(Life_OnNoLife);
         }
 
         public override void OnUpdate()
         {
+
+			if (BattleServer.SINGLETON.Allied.LifeComponent.Life <= 0)
+				this.FiniteStateMachine.ChangeState(this.NextState);
+
             //Increase level?
             if (EnemiesDeadInLevel > EnemiesToLevelUp)
                 LevelUp();
@@ -35,11 +43,7 @@ namespace SGame.GameStates
 
         #region MISC
 
-        //Allied has lost!!!!
-        void Life_OnNoLife(Common.ILife obj)
-        {
-            this.FiniteStateMachine.ChangeState(this.NextState);
-        }
+     
        
 
         private int EnemiesDeadInLevel
