@@ -75,6 +75,7 @@ namespace SGame.Towers
 		//float _time = 5f;
 		void Update()
 		{
+			//If touch the screen...
 			if (Input.GetMouseButton(0))
 			{
 				RaycastHit hit;
@@ -85,13 +86,6 @@ namespace SGame.Towers
 					OnScreenPressed(ref hit);
 				}
 			}
-			/*
-			_time -= Time.deltaTime;
-			if (_time < 0){
-				_time= 5f;
-				SetATowerAt(new Vector3(Random.Range(-5,5),1,Random.Range(-2,2)));
-			}
-			*/
 		}
 
         #region MISC

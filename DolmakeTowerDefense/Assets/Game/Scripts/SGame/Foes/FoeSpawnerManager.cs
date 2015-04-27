@@ -15,7 +15,7 @@ namespace SGame.Foes
         /// <summary>
         /// Public to be able to edit in the Editor
         /// </summary>
-        public FoeSpawner[] E_FoeSpawns;
+        public Transform[] E_FoeSpawns;
         public float MinTimeToSpawn = 1f;
         public float MaxTimeToSpawn = 5f;
         public float FoeSpeedFactor = 1f;
@@ -98,8 +98,22 @@ namespace SGame.Foes
         {
             if (this.enabled)
             {
-                FoeSpawner spawner = E_FoeSpawns[Random.Range(0, E_FoeSpawns.Length - 1)];
-                spawner.SpawnFoe(this);
+                Transform spawner = E_FoeSpawns[Random.Range(0, E_FoeSpawns.Length - 1)];
+
+				//Spawn a Foe
+				GameObject foe = GetFoe();
+
+				if (foe != null)
+				{
+					//Set foe at Pos
+					Vector3 pos_WS = spawner.position;
+					pos_WS.y = BattleServer.SINGLETON.BattleY;
+					foe.transform.position = pos_WS;
+					
+					foe.SendMessage("mOnSpawn", this, SendMessageOptions.DontRequireReceiver);
+				}
+
+				//Invoke again in TimeToSpawinAFoe
                 Invoke("mSpawnFoe", TimeToSpawnAFoe());
             }
         }

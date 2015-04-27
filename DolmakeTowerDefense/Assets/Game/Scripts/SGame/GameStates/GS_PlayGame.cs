@@ -16,7 +16,7 @@ namespace SGame.GameStates
             //Set the current Level
             _currentLevel = BattleServer.SINGLETON.CurrentLevel;
             _lastEnemiesCounter = BattleServer.SINGLETON.DeadFoes;
-            //BattleServer.SINGLETON.Allied.LifeComponent.OnNoLife += new System.Action<Common.ILife>(Life_OnNoLife);
+            BattleServer.SINGLETON.Allied.LifeComponent.OnNoLife += new System.Action<Common.ILife>(Life_OnNoLife);
         }
 		//Allied has lost!!!!
 		void Life_OnNoLife(Common.ILife obj)
@@ -27,7 +27,7 @@ namespace SGame.GameStates
 
         protected override void OnDeactive()
         {
-            //BattleServer.SINGLETON.Allied.LifeComponent.OnNoLife -= new System.Action<Common.ILife>(Life_OnNoLife);
+            BattleServer.SINGLETON.Allied.LifeComponent.OnNoLife -= new System.Action<Common.ILife>(Life_OnNoLife);
         }
 
         public override void OnUpdate()

@@ -18,7 +18,7 @@ namespace SGame
         /// <summary>
         /// Factor that defines how difficulty increases
         /// </summary>
-        public float IncreaseDiffultyFactor = 2f;
+        public float IncreaseDifficultyFactor = 2f;
 
         /// <summary>
         /// Height of battle
@@ -132,9 +132,9 @@ namespace SGame
         {
             this.CurrentLevel++;
             TowerManager.MaxTowers++;
-            FoeSpawnManager.FoeSpeedFactor *= IncreaseDiffultyFactor;
-            FoeSpawnManager.MaxTimeToSpawn /= IncreaseDiffultyFactor;
-            FoeSpawnManager.MinTimeToSpawn /= IncreaseDiffultyFactor;
+            FoeSpawnManager.FoeSpeedFactor *= IncreaseDifficultyFactor;
+			FoeSpawnManager.MaxTimeToSpawn /= IncreaseDifficultyFactor;
+			FoeSpawnManager.MinTimeToSpawn /= IncreaseDifficultyFactor;
         }
         #endregion
     }
