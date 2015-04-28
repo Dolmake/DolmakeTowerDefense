@@ -10,6 +10,7 @@ namespace SGame.GameStates
     {
         protected override void OnActive()
         {
+			//We load the GUI
             Core.SINGLETON.AddSubScene("SGameGUI");            
         }
 
