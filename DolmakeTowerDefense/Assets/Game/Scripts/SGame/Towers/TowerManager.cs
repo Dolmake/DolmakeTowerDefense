@@ -57,14 +57,19 @@ namespace SGame.Towers
         
         
 
-        void OnEnable()
-        {
-            if (Prefab_Tower != null)
-            {
-                _poolTowers.Initialize(this.transform, Prefab_Tower, 0);  
-            }
+        void OnEnable ()
+		{
+			if (Prefab_Tower != null) {
+				_poolTowers.Initialize (this.transform, Prefab_Tower, 0);  
+			}
            
-        }
+			InputServer.SINGLETON.OnTouchCollider += OnTouchCollider;
+		}
+
+		void OnTouchCollider (RaycastHit hit)
+		{
+			OnScreenPressed(ref hit);
+		}
    
 
         void OnDestroy()
@@ -72,6 +77,7 @@ namespace SGame.Towers
             _poolTowers.Deinitialize();
         }
 
+        /*
 		//float _time = 5f;
 		void Update()
 		{
@@ -87,6 +93,7 @@ namespace SGame.Towers
 				}
 			}
 		}
+		*/
 
         #region MISC
 
