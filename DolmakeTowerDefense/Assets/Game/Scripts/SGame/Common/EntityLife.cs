@@ -43,6 +43,8 @@ namespace SGame.Common
             }
         }
 
+       
+
         public void ResetLife()
         {
             Life = StartingLife;

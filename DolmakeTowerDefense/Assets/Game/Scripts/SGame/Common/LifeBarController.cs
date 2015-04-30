@@ -26,6 +26,7 @@ namespace SGame.Common
         void OnEnable()
         {
             LifeComponent.OnLifeChanged += new System.Action<ILife>(Life_OnLifeChanged);
+            UpdateLifeBar(LifeComponent);
         }
 
       

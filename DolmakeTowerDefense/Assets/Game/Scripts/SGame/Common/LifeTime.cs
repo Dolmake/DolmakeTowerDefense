@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
-using SGame.Common;
 using Utils;
 
-namespace SGame.Lasers
+namespace SGame.Common
 {
-    public class LaserLifeTime : MonoBehaviour
+    public class LifeTime : MonoBehaviour
     {
         public float StartingTimeAlive = 5f;
         float _accumTime = 0f;

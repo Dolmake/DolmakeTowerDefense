@@ -5,35 +5,13 @@ using Utils;
 
 namespace SGame.Foes
 {
-    public class Foe : MonoBehaviour, ISpawnable
+    public class Foe : Entity
     {  
         FoeSpawnerManager SpawnManager;//Owner
 
-		/*
-        void OnEnable()
-        {           
-            LifeComponent.OnNoLife += new System.Action<ILife>(Life_OnNoLife);
-        }
-        void OnDisable()
-        {
-            LifeComponent.OnNoLife -= new System.Action<ILife>(Life_OnNoLife);
-        }
+		
 
 
-        void Life_OnNoLife(ILife obj)
-        {          
-            SpawnManager.IncreaseDeadFoes(this);
-            DestroyFoe.mDestroy();
-        }
-        */
-
-		void Update(){
-			if (LifeComponent.Life <= 0)
-			{
-				SpawnManager.IncreaseDeadFoes(this);
-				DestroyFoe.mDestroy();
-			}
-		}
 
         #region Components
 
@@ -48,46 +26,25 @@ namespace SGame.Foes
             }
         }
 
-        ILife _life;
-        public ILife LifeComponent
-        {
-            get
-            {
-                if (_life == null)
-                    _life = this.GetInterface<ILife>();
-                return _life;
-            }
-        }
-
-
-        public  DesctructableInPool _destroyFoe;//public to assing by Editor
-        DesctructableInPool DestroyFoe
-        {
-            get
-            {
-                if (_destroyFoe == null)
-                    _destroyFoe = GetComponent<DesctructableInPool>();
-                return _destroyFoe;
-            }
-        }
         #endregion
 
         #region Messages
 
-        public void mOnImpact(int strenght)
+       
+        public override void mOnSpawn(MonoBehaviour invoker)
         {
-            Debug.Log("Foe Life,"+ LifeComponent + " OnImpact " + strenght);
-            LifeComponent.Life -= strenght;           
-        }       
-
-        public void mOnSpawn(MonoBehaviour invoker)
-        {
+        	base.mOnSpawn(invoker);
             SpawnManager = invoker as FoeSpawnerManager;
-            LifeComponent.ResetLife();
             SpawnManager.IncreaseAliveFoes(this);
             MovementComponent.Speed = SpawnManager.FoeSpeedFactor;
         }
         #endregion
+
+        public override void Life_OnNoLife (ILife obj)
+		{
+			base.Life_OnNoLife (obj);
+			SpawnManager.IncreaseDeadFoes(this);
+		}
 
        
     }

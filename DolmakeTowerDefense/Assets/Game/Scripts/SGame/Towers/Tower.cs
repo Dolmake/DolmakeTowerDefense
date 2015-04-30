@@ -4,67 +4,67 @@ using SGame.Common;
 
 namespace SGame.Towers
 {
-    public class Tower : MonoBehaviour, ISpawnable
+    public class Tower : Entity
     {
 
-        #region Components
 
-        public EntityLife _life;
-        EntityLife LifeComponent
+		#region Components
+        public Range _range;//public to assing by Editor
+		public Range RangeComponent
         {
             get
             {
-                if (_life == null)
-                    _life = GetComponent<EntityLife>();
-                return _life;
+				if (_range == null)
+					_range = GetComponent<Range>();
+				return _range;
             }
         }
-        public DesctructableInPool _destroyTower;//public to assing by Editor
-        DesctructableInPool DestroyTower
+
+		public LaserFire _laserFire;//public to assing by Editor
+		public LaserFire Laser
         {
             get
             {
-                if (_destroyTower == null)
-                    _destroyTower = GetComponent<DesctructableInPool>();
-                return _destroyTower;
+				if (_laserFire == null)
+					_laserFire = GetComponent<LaserFire>();
+				return _laserFire;
             }
         }
         #endregion
 
 
-        void OnEnable()
+        public override void OnEnable()
         {
-            LifeComponent.OnNoLife += new System.Action<ILife>(Life_OnNoLife);
+        	base.OnEnable();
+			RangeComponent.OnEntityInRange += EntityOnRange;
+            
         }      
 
-        void OnDisable()
+        public override void OnDisable()
         {
-            LifeComponent.OnNoLife -= new System.Action<ILife>(Life_OnNoLife);
+        	base.OnDisable();
+			RangeComponent.OnEntityInRange -= EntityOnRange;
+           
         }
 
-		void Life_OnNoLife(ILife obj)
+
+		void EntityOnRange (Entity entity)
 		{
-			DestroyTower.mDestroy();
+			if (entity.EntityType != EntityEnum.None && entity.EntityType != this.EntityType)
+				Laser.Fire(entity.TransformCached.position);
+		}
+
+
+		public override void mOnHardImpact ()
+		{
+			//base.mOnHardImpact ();
+			mOnImpact(1);
 		}
         
 
 
 
-        #region Messages
-
-        public void mOnSpawn(MonoBehaviour towerManager)
-        {
-			if (this.enabled)
-				LifeComponent.ResetLife();
-        }
-
-        public void mOnImpact(int strenght)
-        {
-            Debug.Log("Tower impacted " + strenght);
-            LifeComponent.Life -= strenght;
-           
-        }
-        #endregion
+    
 
 
         

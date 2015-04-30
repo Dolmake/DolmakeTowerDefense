@@ -6,6 +6,7 @@ using SGame.Foes;
 using SGame.Towers;
 using System.Collections.Generic;
 using SGame.BattleGround;
+using SGame.Common;
 
 namespace SGame
 {
@@ -14,6 +15,13 @@ namespace SGame
 
         GameObject LasersParent;//All lasers has the same parent
 		DLMKPool.GameObjectPool _laserPool = new DLMKPool.GameObjectPool();
+		List<Entity> _entities = new List<Entity>();
+
+		public List<Entity> Entities {
+			get {
+				return _entities;
+			}
+		}
 
         /// <summary>
         /// Factor that defines how difficulty increases
@@ -99,7 +107,19 @@ namespace SGame
 
         void Awake()
         {
-            _instance = this;
+           IniSingleton();
+        }
+
+        void OnEnable ()
+		{
+			IniSingleton();
+		}
+
+		void IniSingleton ()
+		{
+			if (_instance != null) return;
+
+			_instance = this;
             if (Prefab_Laser != null)
             {
                 LasersParent = new GameObject("Laser Pool");
@@ -107,7 +127,7 @@ namespace SGame
                 _laserPool.Initialize(LasersParent.transform, Prefab_Laser, 10);
                 CurrentLevel = 1;
             }
-        }
+		}
 
         void OnDestroy()
         {
@@ -132,10 +152,24 @@ namespace SGame
         {
             this.CurrentLevel++;
             TowerManager.MaxTowers++;
-            FoeSpawnManager.FoeSpeedFactor *= IncreaseDifficultyFactor;
+            //if (CurrentLevel < 2)
+            	//FoeSpawnManager.FoeSpeedFactor *= IncreaseDifficultyFactor;
+			
 			FoeSpawnManager.MaxTimeToSpawn /= IncreaseDifficultyFactor;
 			FoeSpawnManager.MinTimeToSpawn /= IncreaseDifficultyFactor;
         }
+
+        public void AddEntity (Entity entity)
+		{
+			if (!_entities.Contains (entity)) {
+				_entities.Add(entity);
+			}
+		}
+
+		public void RemoveEntity (Entity entity)
+		{
+			_entities.Remove(entity);
+		}
         #endregion
     }
 }
