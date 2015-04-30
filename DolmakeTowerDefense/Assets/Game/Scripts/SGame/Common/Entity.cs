@@ -18,25 +18,25 @@ namespace SGame.Common
 	            }
 	        }
 
-			public EntityLife _lifeComponent;//public to assing by Editor
-			public EntityLife LifeComponent
+			public EntityLife _EntityLifeComponent;//public to assing by Editor
+			public EntityLife EntityLifeComponent
 	        {
 	            get
 	            {
-				if (_lifeComponent == null)
-					_lifeComponent = GetComponent<EntityLife>();
-				return _lifeComponent;
+				if (_EntityLifeComponent == null)
+					_EntityLifeComponent = GetComponent<EntityLife>();
+				return _EntityLifeComponent;
 	            }
 	        }
 
-			public DesctructableInPool _destroyer;//public to assing by Editor
-		    public DesctructableInPool Destroyer
+			public DesctructableInPool _DestructableInPool;//public to assing by Editor
+		    public DesctructableInPool DestructableInPoolComponent
 	        {
 	            get
 	            {
-					if (_destroyer == null)
-						_destroyer = GetComponent<DesctructableInPool>();
-					return _destroyer;
+					if (_DestructableInPool == null)
+						_DestructableInPool = GetComponent<DesctructableInPool>();
+					return _DestructableInPool;
 	            }
 	        }
 		
@@ -46,25 +46,25 @@ namespace SGame.Common
 	        public virtual void OnEnable ()
 			{
 				if (EntityType != EntityEnum.None)
-					BattleServer.SINGLETON.AddEntity (this);
+					BattleServer.AddEntity (this);
 
-				if (LifeComponent != null) {
-					LifeComponent.ResetLife();	
-					LifeComponent.OnNoLife +=	Life_OnNoLife;
+				if (EntityLifeComponent != null) {
+					EntityLifeComponent.ResetLife();	
+					EntityLifeComponent.OnNoLife +=	Life_OnNoLife;
 				}
 			}
 			public virtual void OnDisable ()
 			{
-				BattleServer.SINGLETON.RemoveEntity(this);
-				if (LifeComponent != null)
-					LifeComponent.OnNoLife -=	Life_OnNoLife;
+				BattleServer.RemoveEntity(this);
+				if (EntityLifeComponent != null)
+					EntityLifeComponent.OnNoLife -=	Life_OnNoLife;
 			}
 
 			public virtual void mOnImpact (int strenght)
 			{
-				if (LifeComponent != null) {
-					Debug.Log ("Entity Life," + LifeComponent + " OnImpact " + strenght);
-					LifeComponent.Life -= strenght;           
+				if (EntityLifeComponent != null) {
+					Debug.Log ("Entity Life," + EntityLifeComponent + " OnImpact " + strenght);
+					EntityLifeComponent.Life -= strenght;           
 				}
 	        }  
 	        public virtual void mOnHardImpact ()
@@ -75,13 +75,13 @@ namespace SGame.Common
 			public virtual void mOnSpawn(MonoBehaviour towerManager)
         	{
 				if (this.enabled)
-					LifeComponent.ResetLife();
+					EntityLifeComponent.ResetLife();
         	}
 
 			public virtual void Life_OnNoLife(ILife obj)
 			{
-				if (Destroyer)	
-					Destroyer.mDestroy();
+				if (DestructableInPoolComponent)	
+					DestructableInPoolComponent.mDestroy();
 			}
           
 	}

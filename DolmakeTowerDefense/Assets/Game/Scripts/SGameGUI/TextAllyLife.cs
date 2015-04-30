@@ -23,7 +23,7 @@ namespace SGameGUI
         // Update is called once per frame
         void Update()
         {
-            TextMesh.text = BattleServer.SINGLETON.Allied.LifeComponent.Life.ToString();
+            TextMesh.text = BattleServer.SINGLETON.Allied.EntityLifeComponent.Life.ToString();
         }
     }
 }

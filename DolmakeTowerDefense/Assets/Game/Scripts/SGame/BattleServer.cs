@@ -15,13 +15,28 @@ namespace SGame
 
         GameObject LasersParent;//All lasers has the same parent
 		DLMKPool.GameObjectPool _laserPool = new DLMKPool.GameObjectPool();
-		List<Entity> _entities = new List<Entity>();
 
-		public List<Entity> Entities {
+		#region Entities
+		static List<Entity> _entities = new List<Entity>();
+
+		public static List<Entity> Entities {
 			get {
 				return _entities;
 			}
 		}
+
+		public static void AddEntity (Entity entity)
+		{
+			if (!_entities.Contains (entity)) {
+				_entities.Add(entity);
+			}
+		}
+
+		public static void RemoveEntity (Entity entity)
+		{
+			_entities.Remove(entity);
+		}
+		#endregion
 
         /// <summary>
         /// Factor that defines how difficulty increases
@@ -157,19 +172,12 @@ namespace SGame
 			
 			FoeSpawnManager.MaxTimeToSpawn /= IncreaseDifficultyFactor;
 			FoeSpawnManager.MinTimeToSpawn /= IncreaseDifficultyFactor;
+			FoeSpawnManager.MinTimeToSpawn = FoeSpawnManager.MinTimeToSpawn < 0.3f ? 0.3f :FoeSpawnManager.MinTimeToSpawn;
+			FoeSpawnManager.MaxTimeToSpawn = FoeSpawnManager.MaxTimeToSpawn < FoeSpawnManager.MinTimeToSpawn + 0.1f ?
+				FoeSpawnManager.MinTimeToSpawn + 0.1f : FoeSpawnManager.MaxTimeToSpawn;
         }
 
-        public void AddEntity (Entity entity)
-		{
-			if (!_entities.Contains (entity)) {
-				_entities.Add(entity);
-			}
-		}
-
-		public void RemoveEntity (Entity entity)
-		{
-			_entities.Remove(entity);
-		}
+      
         #endregion
     }
 }

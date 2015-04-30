@@ -22,7 +22,7 @@ namespace SGame.Common
 		void Update ()
 		{
 			_entities.Clear();
-			_entities.AddRange(BattleServer.SINGLETON.Entities);
+			_entities.AddRange(BattleServer.Entities);
 			foreach (Entity entity in _entities)
 			 {
 				if (entity.enabled &&
