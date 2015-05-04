@@ -27,20 +27,21 @@ public class LaserFire : MonoBehaviour {
 				laser.SendMessage ("mSetDirection", laserDirection.normalized, SendMessageOptions.DontRequireReceiver);
 				_readyToFire = false;
 			}
-        }
+		}
 
 	// Update is called once per frame
-        void Update()
-        {
-            //Loading fire
-            _accumTime += Time.deltaTime;
-            if (_accumTime >= LoadingFireTime)
-            {
-                _accumTime = 0f;
-                _readyToFire = true;
-            }
+        void Update ()
+		{
+			//Loading fire
+			_accumTime += Time.deltaTime;
+			if (_accumTime >= LoadingFireTime) {
+				_accumTime = 0f;
+				_readyToFire = true;
+			}
 
            
-        }
+		}
+
+	}
 }
-        }
+        
