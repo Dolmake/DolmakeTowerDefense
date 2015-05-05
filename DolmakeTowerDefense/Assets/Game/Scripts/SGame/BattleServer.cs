@@ -7,6 +7,7 @@ using SGame.Towers;
 using System.Collections.Generic;
 using SGame.BattleGround;
 using SGame.Common;
+using DLMKPool;
 
 namespace SGame
 {
@@ -15,6 +16,8 @@ namespace SGame
 
         GameObject LasersParent;//All lasers has the same parent
 		DLMKPool.GameObjectPool _laserPool = new DLMKPool.GameObjectPool();
+
+		DLMKPool.GameObjectPool _explosionPool = new DLMKPool.GameObjectPool();
 
 		#region Entities
 		static List<Entity> _entities = new List<Entity>();
@@ -67,6 +70,7 @@ namespace SGame
         
        
         public GameObject Prefab_Laser;
+        public GameObject Prefab_Explosion;
         
         /// <summary>
         /// Pool of lasers
@@ -140,6 +144,7 @@ namespace SGame
                 LasersParent = new GameObject("Laser Pool");
                 LasersParent.transform.parent = this.transform;
                 _laserPool.Initialize(LasersParent.transform, Prefab_Laser, 10);
+                _explosionPool.Initialize(this.transform, Prefab_Explosion, 10);
                 CurrentLevel = 1;
             }
 		}
@@ -177,6 +182,18 @@ namespace SGame
 				FoeSpawnManager.MinTimeToSpawn + 0.1f : FoeSpawnManager.MaxTimeToSpawn;
         }
 
+
+        public void PlayExplosionAt (Vector3 position_WS)
+		{
+			GameObject explosion = _explosionPool.Get ();
+			ParticleSystem particleSystem = explosion.GetComponent<ParticleSystem> ();
+			if (particleSystem != null) {
+				explosion.transform.position = position_WS;
+				particleSystem.Stop();
+				particleSystem.Play();
+				explosion.PoolRelease(particleSystem.duration);
+			}
+		}
       
         #endregion
     }

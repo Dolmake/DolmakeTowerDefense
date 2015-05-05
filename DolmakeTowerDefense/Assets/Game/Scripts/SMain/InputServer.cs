@@ -44,6 +44,7 @@ public class InputServer : MonoBehaviour {
 				contact = RayForPosition (cameras[i], Input.mousePosition);
 
 				if ( contact ) return;
+				i--;
 
 			}while (i >= 0);
 		}
