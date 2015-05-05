@@ -66,6 +66,11 @@ namespace SGame.Towers
 			InputServer.SINGLETON.OnTouchCollider += OnTouchCollider;
 		}
 
+        void OnDisable()
+        {
+            InputServer.SINGLETON.OnTouchCollider -= OnTouchCollider;
+        }
+
 		void OnTouchCollider (RaycastHit hit)
 		{
 			OnScreenPressed(ref hit);
