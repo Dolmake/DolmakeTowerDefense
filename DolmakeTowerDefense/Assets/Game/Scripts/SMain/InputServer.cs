@@ -22,26 +22,42 @@ public class InputServer : MonoBehaviour {
 
 	void Update ()
 	{
+		bool contact = false;
 		foreach (Touch touch in Input.touches) {
-			foreach (Camera cam in Camera.allCameras) {
+			Camera[] cameras = Camera.allCameras;
+			int i = cameras.Length -1;
+			do
+			{
+				Camera cam = cameras[i];
 				if (touch.phase == TouchPhase.Began)
-					RayForPosition (cam, touch.position);
-			}
+					contact = RayForPosition (cam, touch.position);
+
+				if ( contact ) return;
+				i--;
+			}while ( i >= 0);
 		}
 		if (Input.GetMouseButtonDown (0)) {
-			foreach (Camera cam in Camera.allCameras) {
-				RayForPosition (cam, Input.mousePosition);
-			}
+			Camera[] cameras = Camera.allCameras;
+			int i = cameras.Length -1;
+			do 
+			{
+				contact = RayForPosition (cameras[i], Input.mousePosition);
+
+				if ( contact ) return;
+
+			}while (i >= 0);
 		}
 	}
 
-	void RayForPosition (Camera cam, Vector2 screenPos)
+	bool RayForPosition (Camera cam, Vector2 screenPos)
 	{
 		RaycastHit hit;
 		Vector3 pos_VP = cam.ScreenToViewportPoint (screenPos);
 		Ray ray = cam.ViewportPointToRay (pos_VP);
 		if (Physics.Raycast (ray, out hit, cam.farClipPlane)) {			
-			OnTouchCollider (hit);			
+			OnTouchCollider (hit);	
+			return true;		
 		}
+		else return false;
 	}
 }
